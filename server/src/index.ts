@@ -98,10 +98,10 @@ async function start(): Promise<void> {
     console.log('📅 Mock calendar seeded with sample events');
 
     // Start listening for HTTP requests.
-    app.listen(SERVER_PORT, () => {
-      console.log(`🚀 Server running at http://localhost:${SERVER_PORT}`);
-      console.log(`   API base: http://localhost:${SERVER_PORT}/api`);
-
+    // Start listening for HTTP requests on 0.0.0.0 for Cloud Run compatibility
+    app.listen(SERVER_PORT, '0.0.0.0', () => {
+      console.log(`🚀 Server (24cs2013) running at http://0.0.0.0:${SERVER_PORT}`);
+      console.log(`   API base: http://0.0.0.0:${SERVER_PORT}/api`);
       console.log('✨ Deferr AI Engine: Gemini 1.5 Flash Active');
     });
   } catch (err) {

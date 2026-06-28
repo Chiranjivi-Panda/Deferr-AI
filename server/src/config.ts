@@ -21,9 +21,8 @@ dotenv.config({ path: path.resolve(process.cwd(), '..', '.env') });
 
 
 // ── Server Configuration ────────────────────────────────────────────────────
-/** Port the Express server listens on. Defaults to 3001. */
-export const SERVER_PORT: number = parseInt(process.env.SERVER_PORT || '3001', 10);
-
+/** Port the Express server listens on. Cloud Run uses PORT, local uses SERVER_PORT or defaults to 3001. */
+export const SERVER_PORT: number = parseInt(process.env.PORT || process.env.SERVER_PORT || '3001', 10);
 /**
  * The origin URL of the frontend client.
  * Used by the CORS middleware to allow cross-origin requests.
