@@ -13,7 +13,7 @@
  * backend at http://localhost:3001. In production, the server serves
  * the built client, so the relative path still works.
  */
-export const API_BASE = '/api';
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 /**
  * CATEGORY_COLORS — Tailwind CSS class sets for each task category.
