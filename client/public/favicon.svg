@@ -1,0 +1,20 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" id="deferr-brand-24cs2013">
+  <defs>
+    <linearGradient id="deferr-premium-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5C62EC" />
+      <stop offset="100%" stop-color="#2D2B99" />
+    </linearGradient>
+  </defs>
+  <!-- Premium Squircle Background Matrix -->
+  <rect width="100" height="100" rx="28" fill="url(#deferr-premium-grad)" />
+  
+  <!-- Sharp Flat Dash (Spans X: 24 to 42) -->
+  <path d="M24 50 H42" stroke="#F4F4F5" stroke-width="7" stroke-linecap="butt" fill="none" />
+  
+  <!-- Sharp Flat Square Dot (Spans X: 49 to 55 - Perfectly Centered) -->
+  <path d="M49 50 H55" stroke="#F4F4F5" stroke-width="7" stroke-linecap="butt" fill="none" />
+  
+  <!-- Round Bulbous Arrowhead Assembly (Stem starts at X: 62 to close the gap) -->
+  <path d="M62 50 H76" stroke="#F4F4F5" stroke-width="7" stroke-linecap="butt" fill="none" />
+  <path d="M67 39 L76 50 L67 61" stroke="#F4F4F5" stroke-width="7.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+</svg>

@@ -1,0 +1,363 @@
+/* ==========================================================================
+ * index.css — Global styles for Last-Minute Life Saver
+ * ==========================================================================
+ *
+ * This is the MOST IMPORTANT styling file. It sets up:
+ *   1. Tailwind v4 (via the new @import syntax — NOT the old @tailwind directives)
+ *   2. Custom theme variables (colors, fonts)
+ *   3. Aurora animated gradient background
+ *   4. Glassmorphism card styles
+ *   5. Custom scrollbar styling
+ *   6. Smooth default transitions
+ * ========================================================================== */
+
+/* --------------------------------------------------------------------------
+ * 1. TAILWIND v4 IMPORT
+ * In Tailwind v4, you use a single @import instead of the old
+ * @tailwind base / @tailwind components / @tailwind utilities directives.
+ * -------------------------------------------------------------------------- */
+@import "tailwindcss";
+
+/* --------------------------------------------------------------------------
+ * 2. CUSTOM THEME
+ * The @theme block registers CSS custom properties that Tailwind v4 can use
+ * in utility classes. For example, --color-base-900 lets you write bg-base-900.
+ * -------------------------------------------------------------------------- */
+@theme {
+  /* Dark background palette — goes from near-black to a deep indigo */
+  --color-base-950: #0a0a0f;
+  --color-base-900: #0D0D0F;
+  --color-base-800: #1a1830;
+  --color-base-700: #252348;
+
+  /* Override the default sans font stack so Inter is used everywhere */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* --------------------------------------------------------------------------
+ * 3. BODY DEFAULTS
+ * Set the base font, background, text color, and ensure the page fills
+ * at least the full viewport height.
+ * -------------------------------------------------------------------------- */
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-base-900);
+  color: #F4F4F5; /* Crisp zinc/white */
+  min-height: 100vh;
+  /* Prevent horizontal scrollbar from aurora blobs */
+  overflow-x: hidden;
+}
+
+/* --------------------------------------------------------------------------
+ * 4. AURORA ANIMATED BACKGROUND
+ * Creates a subtle, slow-moving gradient glow behind the entire page.
+ * Three blobs (indigo, violet, sky-blue) float around using CSS animations,
+ * giving the UI a "living" feel without being distracting.
+ * -------------------------------------------------------------------------- */
+.aurora-bg {
+  position: fixed;
+  inset: 0;          /* shorthand for top/right/bottom/left: 0 */
+  z-index: -1;       /* behind all content */
+  overflow: hidden;
+}
+
+/* Blob 1: Indigo — top-left corner */
+.aurora-bg::before {
+  content: '';
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  top: -100px;
+  left: -100px;
+  /* Radial gradient fades from indigo to transparent */
+  background: radial-gradient(circle, #6366f1 0%, transparent 70%);
+  filter: blur(100px);
+  opacity: 0.25;
+  animation: aurora-drift 20s ease-in-out infinite;
+}
+
+/* Blob 2: Violet — bottom-right corner, delayed so blobs move out of sync */
+.aurora-bg::after {
+  content: '';
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  bottom: -80px;
+  right: -80px;
+  background: radial-gradient(circle, #8b5cf6 0%, transparent 70%);
+  filter: blur(100px);
+  opacity: 0.2;
+  /* Negative delay starts the animation partway through its cycle */
+  animation: aurora-drift 20s ease-in-out infinite -7s;
+}
+
+/*
+ * Blob 3: Sky blue — center-right
+ * We can't use a third pseudo-element on .aurora-bg (only ::before and ::after
+ * exist), so we add a child <span class="aurora-blob"> in the markup, OR we
+ * layer it via a background gradient on the container itself.
+ * Here we use a box-shadow trick on the container for simplicity.
+ */
+.aurora-bg {
+  /* The box-shadow creates a large, blurred sky-blue glow in the center-right */
+  box-shadow: 300px 200px 250px 120px rgba(14, 165, 233, 0.12);
+  animation: aurora-drift 20s ease-in-out infinite -13s;
+}
+
+/* Keyframes: blobs slowly drift around and scale up/down */
+@keyframes aurora-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(50px, -30px) scale(1.1);
+  }
+  66% {
+    transform: translate(-30px, 50px) scale(0.95);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * 5. PREMIUM GLASSMORPHISM CARD
+ * The "frosted glass" effect, upgraded with subtle inner borders and shadows
+ * for a highly polished, tactile 3D feel.
+ * -------------------------------------------------------------------------- */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px); /* Safari support */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.15); /* Top highlight for depth */
+  border-radius: 20px;
+  box-shadow: 
+    0 4px 24px -1px rgba(0, 0, 0, 0.2), 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Slightly brighter on hover — used for interactive glass cards */
+.glass-hover {
+  transition-property: background-color, border-color, box-shadow, transform;
+  transition-duration: 300ms;
+  transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+  transform: translateZ(0);
+  will-change: transform, background-color, border-color, box-shadow;
+}
+.glass-hover:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.16);
+  border-top-color: rgba(255, 255, 255, 0.25);
+  box-shadow: 
+    0 12px 32px -4px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+}
+
+/* --------------------------------------------------------------------------
+ * 5.1 MAGIC PROPOSAL GLOW
+ * A subtle pulsing animated glow for the AI Reasoning Card.
+ * -------------------------------------------------------------------------- */
+.magic-glow {
+  position: relative;
+}
+.magic-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(90deg, rgba(245,158,11,0.5), rgba(99,102,241,0.5), rgba(245,158,11,0.5));
+  background-size: 200% auto;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: shine 4s linear infinite;
+  z-index: -1;
+  opacity: 0.6;
+}
+
+@keyframes shine {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* --------------------------------------------------------------------------
+ * 6. CUSTOM SCROLLBAR
+ * Thin, translucent scrollbar that blends into the dark UI.
+ * Only affects WebKit browsers (Chrome, Edge, Safari).
+ * -------------------------------------------------------------------------- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Firefox scrollbar (uses different properties) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+/* --------------------------------------------------------------------------
+ * 7. SMOOTH DEFAULT TRANSITIONS
+ * Every element gets a fast transition on color-related properties.
+ * We deliberately EXCLUDE `transform` so we don't conflict with
+ * Framer Motion's own transform animations (it manages those directly).
+ * -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color, opacity;
+  transition-duration: 150ms;
+  transition-timing-function: ease;
+}
+
+/* --------------------------------------------------------------------------
+ * 8. AMBIENT URGENCY OS
+ * Dynamic styles based on the closest deadline.
+ * -------------------------------------------------------------------------- */
+
+body {
+  transition: background-color 500ms ease;
+}
+
+body:has([data-urgency="nominal"]) {
+  background-color: var(--color-base-900);
+}
+
+body:has([data-urgency="alert"]) {
+  background-color: #1a1610; /* subtle amber tint */
+}
+
+body:has([data-urgency="critical"]) {
+  background-color: #1f0d0d; /* subtle red tint */
+}
+
+/* Dim non-critical tasks in critical mode */
+[data-urgency="critical"] .glass:not([data-is-most-urgent="true"]) {
+  opacity: 0.25;
+  pointer-events: none;
+  transform: scale(0.98);
+  transition: all 0.5s ease;
+}
+
+/* Emphasize critical tasks */
+[data-urgency="critical"] .glass[data-is-most-urgent="true"] {
+  opacity: 1;
+  transform: scale(1.02);
+  z-index: 10;
+  box-shadow: 0 0 30px rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.5);
+  transition: all 0.5s ease;
+}
+
+/* Proximity Pulses */
+@keyframes pulse-slow {
+  0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+}
+
+@keyframes pulse-fast-red {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
+  70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.pulse-amber {
+  animation: pulse-slow 3s infinite;
+}
+
+.pulse-red {
+  animation: pulse-fast-red 1.5s infinite;
+}
+
+/* --------------------------------------------------------------------------
+ * 9. LIGHT MODE CSS ENGINE
+ * -------------------------------------------------------------------------- */
+:root[data-theme="light"] {
+  --color-base-950: #ffffff;
+  --color-base-900: #f8fafc;
+  --color-base-800: #e2e8f0;
+  --color-base-700: #cbd5e1;
+}
+
+[data-theme="light"] body {
+  background-color: var(--color-base-900);
+  color: #0f172a;
+}
+
+[data-theme="light"] body:has([data-urgency="alert"]) {
+  background-color: #fffbeb; /* light amber */
+}
+
+[data-theme="light"] body:has([data-urgency="critical"]) {
+  background-color: #fef2f2; /* light red */
+}
+
+/* Update text colors to ensure visibility in light mode */
+[data-theme="light"] .text-white {
+  color: #0f172a;
+}
+
+[data-theme="light"] .text-slate-300 {
+  color: #334155;
+}
+
+[data-theme="light"] .text-slate-400 {
+  color: #475569;
+}
+
+[data-theme="light"] .text-slate-500 {
+  color: #64748b;
+}
+
+[data-theme="light"] nav {
+  background-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+[data-theme="light"] .border-gray-800\/50 {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .glass {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 
+    0 4px 24px -1px rgba(0, 0, 0, 0.05), 
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.5);
+}
+
+[data-theme="light"] .glass-hover:hover {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(0, 0, 0, 0.15);
+  border-top-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 
+    0 12px 32px -4px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.6);
+}
+
+/* --------------------------------------------------------------------------
+ * 10. ANIMATED TEXT SHIMMER (DEFERR AI)
+ * -------------------------------------------------------------------------- */
+@keyframes text-shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: -200% 50%; }
+}
+.animate-text-shimmer {
+  animation: text-shimmer 3.5s linear infinite;
+}
+
